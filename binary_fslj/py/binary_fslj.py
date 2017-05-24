@@ -1,5 +1,5 @@
 import os, sys, math
-sys.path.append("/home/nam4/Desktop/sandbox/feasst_adsorption_compare/")
+sys.path.append("${HOME}/PYFeasst/")
 import pyfeasst as pf
 
 class binary_fslj (pf.Base):

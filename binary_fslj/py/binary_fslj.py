@@ -1,5 +1,5 @@
 import os, sys, math
-sys.path.append("../../")
+sys.path.append("/home/nam4/Desktop/sandbox/feasst_adsorption_compare/")
 import pyfeasst as pf
 
 class binary_fslj (pf.Base):
@@ -89,22 +89,24 @@ class binary_fslj (pf.Base):
 		mc.nMolSeek(orderMin, molA, 1000000) # mininum bound with pure A (smaller of the 2 species)
 
 		nfreq = 100000
-		npr = 10000000000
 		mc.initLog("log", nfreq);
-		mc.initColMat("colMat", nfreq);
-		mc.setNFreqCheckE(nfreq, 1e-8);
-		mc.setNFreqTune(nfreq);
-		mc.initMovie("movie", nfreq);
-		mc.initRestart("tmp/rst", nfreq);
+		mc.initColMat("colMat", nfreq); # what does this do??
+		mc.setNFreqCheckE(nfreq, 1e-8); # what does this do??
+		mc.setNFreqTune(nfreq); # what does this do??
+		mc.initMovie("movie", nfreq*1000);
+		mc.initRestart("tmp/rst", nfreq*1000); 
 
-		em.initFreq(1)
-		em.initPrintFreq(nfreq)
-		em.initFileName("extmom")
+		em.initFreq(5) # from 1 -> 5 makes this as efficient as measureing 2nd vs 3rd order moments
+		em.initPrintFreq(nfreq*1000)
+		em.initFileName("extMom")
+		mc.initAnalyze(em)
 
 		cc.collectInit(4.0e-6) # start collecting TMMC matric at wlFlat == 18
 		cc.tmmcInit(5.0e-7)  # switch to TMMC after 22
-		mc.wlFlatProduction(18) # after 18 iterations, switch to "production" phase and measure
+		mc.wlFlatProduction(22) # after this # iterations, switch to "production" phase and measure
 		mc.runNumTrials(steps)
+		
+		em.write() # write at the end to ensure up-to-date
 
 if __name__ == "__main__":
 	x = binary_fslj()

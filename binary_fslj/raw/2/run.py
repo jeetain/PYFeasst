@@ -4,4 +4,4 @@ import binary_fslj as bfslj
 
 if __name__ == "__main__":
 	x = bfslj.binary_fslj()
-	x.run(steps=int(1e7), orderMin=229, orderMax=325, temp=1.50, mu1=0.0, dmu2=1.65, order=3)
+	x.run(steps=int(1e9), orderMin=229, orderMax=325, temp=1.50, mu1=0.0, dmu2=1.65, order=3)

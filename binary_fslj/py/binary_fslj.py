@@ -58,8 +58,7 @@ class binary_fslj (pf.Base):
 		p.rCutijset(1,1,(p.sig(1)+p.sig(1))/2*3.0)
 		s.updateCells(p.rCutMaxAll()) # intermolecular potential needs max rcut
 
-		p.linearShift(True) # force-shifted at rcut so dU/dr = 0
-		p.cutShift(True) # also shift U = 0 at rcut
+		p.linearShift(True) # force-shifted at rcut
 
 		ipair = feasst.PairHybrid (s, p.rCutMaxAll())
 		ipair.addPair(p)

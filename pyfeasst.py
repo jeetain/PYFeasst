@@ -3,7 +3,7 @@ import os, sys
 def ntot_window_scaling (n_f, dw, w_max, n_ov):
 	"""
 	Compute the upper bounds for windows of a flat histogram simulation using N_{tot} as the order parameter.
-	
+
 	Parameters
 	----------
 	n_f : int
@@ -14,12 +14,12 @@ def ntot_window_scaling (n_f, dw, w_max, n_ov):
 		Number of windows to use
 	n_ov : int
 		Number of overlapping points to use
-    
+
 	Returns
 	-------
 	ndarray
 		Array of tuples of (lower, upper) bound for each window
-   
+
 	"""
 
 	dw -= n_ov # account for overlap
@@ -28,7 +28,7 @@ def ntot_window_scaling (n_f, dw, w_max, n_ov):
 	alpha = np.log(float(n_f)/(float(n_f) - float(dw))) / np.log(w_max/(w_max-1.0))
 	coeff = float(n_f)/(float(w_max)**alpha)
 
-    
+
 	x = np.linspace(1, w_max, w_max)
 	ub = np.round(coeff*x**alpha).astype(int)
 	lb = [0]
@@ -53,6 +53,8 @@ class Base (object):
 		"""
 		Find the FEASST install directory and add it to the python path.
 		This requiers FEASST_INSTALL_DIR_ to be defined in the shell environment.
+		The user must manually specify this, e.g., add this to ~/.bashrc:
+		export FEASST_INSTALL_DIR_="/home/username/path/to/feasst/"
 
 		"""
 

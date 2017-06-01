@@ -27,7 +27,7 @@ class binary_fslj (pf.Base):
 		orderMax : int
 			Max number of particles to allow in this window (default=100)
 		orderMin : int
-			Min number of particles to allow in this window (default=100)
+			Min number of particles to allow in this window (default=0)
 		temp : double
 			Temperature (default = 1.5)
 		mu1 : double
@@ -43,7 +43,7 @@ class binary_fslj (pf.Base):
 
 		s = feasst.Space(3,0)
 		s.lset(10)
-		p = feasst.PairLJMulti(s, s.minl()/2.0)
+		p = feasst.PairLJMulti(s, s.minl()/4.0)
 
 		molA = os.path.dirname(os.path.realpath(__file__))+"/data.lj"
 		molB = os.path.dirname(os.path.realpath(__file__))+"/data.ljb"
@@ -53,12 +53,16 @@ class binary_fslj (pf.Base):
 		s.addMolInit(molB)
 		p.initLMPData(molB)
 
+		# Force-shift potential for each pair
 		p.rCutijset(0,0,(p.sig(0)+p.sig(0))/2*3.0)
 		p.rCutijset(0,1,(p.sig(0)+p.sig(1))/2*3.0)
 		p.rCutijset(1,1,(p.sig(1)+p.sig(1))/2*3.0)
-		s.updateCells(p.rCutMaxAll()) # intermolecular potential needs max rcut
 
-		p.linearShift(True) # force-shifted at rcut
+		for i in range(2):
+			for j in range(2):
+				p.linearShiftijset(i,j,True)
+
+		s.updateCells(p.rCutMaxAll()) # intermolecular potential needs max rcut
 
 		ipair = feasst.PairHybrid (s, p.rCutMaxAll())
 		ipair.addPair(p)
@@ -90,20 +94,20 @@ class binary_fslj (pf.Base):
 
 		nfreq = 100000
 		mc.initLog("log", nfreq)
-		mc.initColMat("colMat", nfreq)
-		mc.setNFreqCheckE(nfreq, 1e-8)
-		mc.setNFreqTune(nfreq)
+		mc.initColMat("colMat", nfreq) 
+		mc.setNFreqCheckE(nfreq, 1e-8) 
+		mc.setNFreqTune(nfreq) 
 		mc.initMovie("movie", nfreq*1000)
 		mc.initRestart("tmp/rst", nfreq*1000)
 
-		em.initFreq(5) # from 1 -> 5 makes this as efficient as measureing 2nd vs 3rd order moments
+		em.initFreq(5) # from 1 -> 5 makes this as efficient as measuring 2nd vs 3rd order moments
 		em.initPrintFreq(nfreq*1000)
 		em.initFileName("extMom")
 		mc.initAnalyze(em)
 
 		cc.collectInit(4.0e-6) # start collecting TMMC matric at wlFlat == 18
 		cc.tmmcInit(5.0e-7)  # switch to TMMC after 22
-		mc.wlFlatProduction(22) # after this # iterations, switch to "production" phase and measure
+		mc.wlFlatProduction(22) # after this number of iterations, switch to "production" phase and measure
 		mc.runNumTrials(steps)
 
 		em.write() # write at the end to ensure up-to-date

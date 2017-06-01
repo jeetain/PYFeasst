@@ -56,7 +56,7 @@ class cylinder_fslj (pf.Base):
 		p.rCutijset(0,0,(p.sig(0)+p.sig(0))/2*3.0)
 		p.rCutijset(0,1,(p.sig(0)+p.sig(1))/2*3.0)
 		p.rCutijset(1,1,(p.sig(1)+p.sig(1))/2*3.0)
-		
+
 		for i in range(2):
                         for j in range(2):
                                 p.linearShiftijset(i,j,True)
@@ -66,7 +66,7 @@ class cylinder_fslj (pf.Base):
 		barrier = feasst.SpeciesBarriers (s.nParticleTypes())
 		radius = 4.0 # this goes to CENTER OF MASS, so pore radius actually = 4.5 with sigma/2 exclusion
 		eps_w = 3.0
-		width = 1.0
+		width = 0.5
 		pt = [0.0, 0.0, 0.0]
 		barrier.addSqwCylinder (0, pt, radius, eps_w, width, 0)
 		barrier.addSqwCylinder (1, pt, radius-(p.sig(1)-p.sig(0))/2, eps_w/2.0, width, 0)
@@ -76,6 +76,8 @@ class cylinder_fslj (pf.Base):
 		ipair.addPair(p)
 		ipair.addPair(pairBarr)
 		ipair.initEnergy()
+
+		assert (barrier.safe(ipair)) # check barrier doesn't violate any boundary conditions or allow periodic interactions
 
 		orderParam = "nmol"
 		beta = 1.0/temp
@@ -111,7 +113,7 @@ class cylinder_fslj (pf.Base):
 
 		em.initFreq(5)
 		em.initPrintFreq(nfreq*1000)
-		em.initFileName("extmom")
+		em.initFileName("extMom")
 		mc.initAnalyze(em)
 
 		cc.collectInit(4.0e-6) # start collecting TMMC matric at wlFlat == 18

@@ -27,7 +27,7 @@ class cylinder_fslj (pf.Base):
 		orderMax : int
 			Max number of particles to allow in this window (default=100)
 		orderMin : int
-			Min number of particles to allow in this window (default=100)
+			Min number of particles to allow in this window (default=0)
 		temp : double
 			Temperature (default = 1.5)
 		mu1 : double
@@ -55,7 +55,7 @@ class cylinder_fslj (pf.Base):
 		barrier = feasst.SpeciesBarriers (s.nParticleTypes())
 		radius = 4.0 # this goes to CENTER OF MASS, so pore radius actually = 4.5 with sigma/2 exclusion
 		eps_w = 3.0
-		width = 1.0
+		width = 0.5
 		pt = [0.0, 0.0, 0.0]
 		barrier.addSqwCylinder (0, pt, radius, eps_w, width, 0)
 		pairBarr = feasst.PairBarriers (s, barrier)
@@ -64,6 +64,8 @@ class cylinder_fslj (pf.Base):
 		ipair.addPair(p)
 		ipair.addPair(pairBarr)
 		ipair.initEnergy()
+
+		assert (barrier.safe(ipair)) # check barrier doesn't violate any boundary conditions or allow periodic interactions
 
 		orderParam = "nmol"
 		beta = 1.0/temp
@@ -92,7 +94,7 @@ class cylinder_fslj (pf.Base):
 
 		em.initFreq(5)
 		em.initPrintFreq(nfreq)
-		em.initFileName("extmom")
+		em.initFileName("extMom")
 		mc.initAnalyze(em)
 
 		cc.collectInit(4.0e-6) # start collecting TMMC matric at wlFlat == 18

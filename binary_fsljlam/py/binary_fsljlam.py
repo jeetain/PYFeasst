@@ -17,8 +17,6 @@ class binary_fsljlam (pf.Base):
 		global feasst
 		self.get_feasst()
 		import feasst
-		self.defaults = {"molA":,
-		molB:,}
 
 	def parse (**kwargs):
 		self.orderMax = kwargs.get("orderMax", 100)

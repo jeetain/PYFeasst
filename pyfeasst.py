@@ -79,15 +79,25 @@ class Base (object):
                 	feasstdir = feasstname[0].split('/_feasst.so')[0]
                 	sys.path.append(feasstdir)
 
-	def run (self):
+	def parse (**kwargs):
+		"""
+		Parse inpute parameters.
+
+		"""
+
+		self.params = {}
+
+	def run (self, **kwargs):
 		"""
 		Run a simulation.
 
 		"""
 
+		self.parse(kwargs)
+
 		print "Beginning simulation"
 
-	def restart (self):
+	def restart (self, **kwargs):
 		"""
 		Restart a simulation.
 
